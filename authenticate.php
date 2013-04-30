@@ -48,9 +48,14 @@
             'limit' => 1
         ));
         
-        if ($users)
-            login($users[0]);
-        else
+        if ($users) {
+	    $user = $users[0];
+	    $user->name = $profile['firstName'] . ' ' . $profile['lastName'];
+	    $user->linkedin_picture_url  = $profile['pictureUrl'];
+
+            login($user);
+        }
+	else
         {
             // New user
             
