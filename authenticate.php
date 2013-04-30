@@ -56,7 +56,8 @@
 	    if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
 		'oauth_client' =>$client,
 		'user' => $user,
-		'profile' => $profile
+		'profile' => $profile,
+		'oauth_access_token' => $access_token
 	    ), true))
 	    	login($user);
         }
@@ -93,6 +94,7 @@
 		'user' => $user,
 		'profile' => $profile,
 		'oauth_client' =>$client,
+		'oauth_access_token' => $access_token
 	    ), true))
 	    	login($user);
         }
