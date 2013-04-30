@@ -63,6 +63,7 @@
             }
             
             $user = new ElggUser();
+            $user->subtype = 'linkedin';
             $user->username = $username;
             $user->name = $profile['firstName'] . ' ' . $profile['lastName'];
             $user->email = $email;
