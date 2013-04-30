@@ -35,7 +35,7 @@
 //        parse_str($response['result'], $info);
         $client->setAccessToken($access_token);
 //print_r($info['access_token']);
-        $response = $client->fetch('https://api.linkedin.com/v1/people/~:(id,first-name,last-name)', array('oauth2_access_token' => $access_token, 'format' => 'json'));
+        $response = $client->fetch('https://api.linkedin.com/v1/people/~:(id,first-name,last-name,picture-url)', array('oauth2_access_token' => $access_token, 'format' => 'json'));
      //   var_dump($response, $response['result']);
         $profile = $response['result'];
 
@@ -75,6 +75,8 @@
             $user->save();
             
             $user->linkedin_id = $profile['id'];
+            
+            $user->linkedin_picture_url  = $profile['pictureUrl'];
             
             login($user);
         }
