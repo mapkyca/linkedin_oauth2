@@ -18,7 +18,7 @@
     if (!get_input('code'))
     {
         $params = array('scope' => 'r_fullprofile r_emailaddress');
-        $params = elgg_trigger_plugin_hook('linkedin_oauth2', 'permissions', null, $params); // Allow customisation permissions
+        $params = elgg_trigger_plugin_hook('linkedin_oauth2', 'permissions', $params); // Allow customisation permissions
         $auth_url = $client->getAuthenticationUrl($AUTHORIZATION_ENDPOINT . "?response_type=code&state=$state", $REDIRECT_URI, $params);
         header('Location: ' . $auth_url);
         die('Redirect');
