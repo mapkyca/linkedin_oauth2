@@ -53,7 +53,11 @@
 	    $user->name = $profile['firstName'] . ' ' . $profile['lastName'];
 	    $user->linkedin_picture_url  = $profile['pictureUrl'];
 
-            login($user);
+	    if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
+		'user' => $user,
+		'profile' => $profile
+	    ), true))
+	    	login($user);
         }
 	else
         {
@@ -84,7 +88,11 @@
             
             $user->linkedin_picture_url  = $profile['pictureUrl'];
             
-            login($user);
+            if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
+		'user' => $user,
+		'profile' => $profile
+	    ), true))
+	    	login($user);
         }
 
         ?>
