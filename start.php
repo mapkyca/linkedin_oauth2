@@ -35,6 +35,11 @@
 				$user = $params['entity'];
 				$size = $params['size'];
 				
+				if ($return_value) {
+					return $return_value;
+				}
+
+				
 				if (!elgg_instanceof($user, 'user')) {
 					return null;
 				}
