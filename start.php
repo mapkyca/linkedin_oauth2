@@ -18,6 +18,7 @@
                 //$return_value[] = 'mod/linkedin_oauth2/authenticate.php';
                 $return_value[] = 'linkedin';
                 $return_value[] = 'linkedin/Redirect';
+                $return_value[] = 'linkedin/.*/.*';
        
                 
                 // return the modified value
