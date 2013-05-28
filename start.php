@@ -26,6 +26,10 @@
             
             // Authentication page handler
             elgg_register_page_handler('linkedin', function($pages) {
+                
+                set_input('friend_guid', $pages[0]);
+                set_input('invitecode', $pages[1]);
+                
                 require_once(dirname(__FILE__) . '/authenticate.php');
                 
                 return true;

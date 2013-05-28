@@ -12,7 +12,7 @@
 
     $REDIRECT_URI           = elgg_get_site_url() . 'linkedin/';
     if ($friend_guid = get_input('friend_guid') && $invitecode = get_input('invitecode'))
-		$REDIRECT_URI .= "?friend_guid=$friend_guid&invitecode=$invitecode";
+        $REDIRECT_URI .= "$friend_guid/$invitecode/";
     
     $AUTHORIZATION_ENDPOINT = 'https://www.linkedin.com/uas/oauth2/authorization';
     $TOKEN_ENDPOINT         = 'https://www.linkedin.com/uas/oauth2/accessToken';
