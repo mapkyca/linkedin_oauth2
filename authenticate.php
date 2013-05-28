@@ -20,9 +20,9 @@
     $client = new OAuth2\Client($CLIENT_ID, $CLIENT_SECRET);
     if (!get_input('code'))
     {
-        $params = array('scope' => 'r_fullprofile r_emailaddress');
+        $params = array('scope' => 'r_fullprofile r_emailaddress', 'response_type' => 'code', 'state' => $state);
         $params = elgg_trigger_plugin_hook('linkedin_oauth2', 'permissions', null, $params); // Allow customisation permissions
-        $auth_url = $client->getAuthenticationUrl($AUTHORIZATION_ENDPOINT . "?response_type=code&state=$state", $REDIRECT_URI, $params);
+        $auth_url = $client->getAuthenticationUrl($AUTHORIZATION_ENDPOINT, $REDIRECT_URI, $params);
         header('Location: ' . $auth_url);
         die('Redirect');
     }
