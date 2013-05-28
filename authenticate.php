@@ -11,6 +11,9 @@
         $state = md5(elgg_get_site_url() . dirname(__FILE__));
 
     $REDIRECT_URI           = elgg_get_site_url() . 'linkedin/';
+    if ($friend_guid = get_input('friend_guid') && $invitecode = get_input('invitecode'))
+		$REDIRECT_URI .= "?friend_guid=$friend_guid&invitecode=$invitecode";
+    
     $AUTHORIZATION_ENDPOINT = 'https://www.linkedin.com/uas/oauth2/authorization';
     $TOKEN_ENDPOINT         = 'https://www.linkedin.com/uas/oauth2/accessToken';
 
@@ -89,6 +92,31 @@
             $user->linkedin_id = $profile['id'];
             
             $user->linkedin_picture_url  = $profile['pictureUrl'];
+            
+            // Trigger register hook
+            $params = array(
+                'user' => $user,
+                'password' => $password,
+                'friend_guid' => get_input('friend_guid'),
+                'invitecode' => get_input('invitecode'),
+            );
+            if (!elgg_trigger_plugin_hook('register', 'user', $params, TRUE)) {
+                    $user->delete();
+                    throw new RegistrationException(elgg_echo('registerbad'));
+            }
+            
+            // If $friend_guid has been set, make mutual friends
+            if ($friend_guid = get_input('friend_guid')) {
+                    if ($friend_user = get_user($friend_guid)) {
+                            if (get_input('invitecode') == generate_invite_code($friend_user->username)) {
+                                    $user->addFriend($friend_guid);
+                                    $friend_user->addFriend($user->guid);
+
+                                    add_to_river('river/relationship/friend/create', 'friend', $user->getGUID(), $friend_guid);
+                                    add_to_river('river/relationship/friend/create', 'friend', $friend_guid, $user->getGUID());
+                            }
+                    }
+            }
             
             if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
 		'user' => $user,
