@@ -99,6 +99,9 @@
             
             $user->linkedin_picture_url  = $profile['pictureUrl'];
             
+            // Linkedin validates emails, so we're going to assume they did a good job.
+            elgg_set_user_validation_status($user->guid, true, 'linkedin_oauth2');   
+            
             // Trigger register hook
             $params = array(
                 'user' => $user,
