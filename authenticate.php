@@ -11,7 +11,7 @@
         $state = md5(elgg_get_site_url() . dirname(__FILE__));
 
     $REDIRECT_URI           = elgg_get_site_url() . 'linkedin/';
-    if ($friend_guid = get_input('friend_guid') && $invitecode = get_input('invitecode'))
+    if (($friend_guid = get_input('friend_guid')) && ($invitecode = get_input('invitecode')))
         $REDIRECT_URI .= "$friend_guid/$invitecode/";
     
     $AUTHORIZATION_ENDPOINT = 'https://www.linkedin.com/uas/oauth2/authorization';
@@ -45,24 +45,30 @@
         $response = $client->fetch('https://api.linkedin.com/v1/people/~/email-address', array('oauth2_access_token' => $access_token, 'format' => 'json'));
         $email = $response['result'];
 
+        $ia = elgg_set_ignore_access(); // Ensure we get disabled users as well.
         $users = elgg_get_entities_from_metadata(array(
             'types' => 'user',
             'metadata_name_value_pairs' => array('name' => 'linkedin_id', 'value' => $profile['id']),
             'limit' => 1
         ));
+        elgg_set_ignore_access($ia);
         
         if ($users) {
 	    $user = $users[0];
 	    $user->name = $profile['firstName'] . ' ' . $profile['lastName'];
 	    $user->linkedin_picture_url  = $profile['pictureUrl'];
 
-	    if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
-		'oauth_client' =>$client,
-		'user' => $user,
-		'profile' => $profile,
-		'oauth_access_token' => $access_token
-	    ), true))
-	    	login($user);
+            try {
+                if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
+                    'oauth_client' =>$client,
+                    'user' => $user,
+                    'profile' => $profile,
+                    'oauth_access_token' => $access_token
+                ), true))
+                    login($user);
+            } catch(Exception $e) {
+                register_error($e->getMessage());
+            }
         }
 	else
         {
@@ -118,13 +124,17 @@
                     }
             }
             
-            if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
-		'user' => $user,
-		'profile' => $profile,
-		'oauth_client' =>$client,
-		'oauth_access_token' => $access_token
-	    ), true))
-	    	login($user);
+            try {
+                if (elgg_trigger_plugin_hook('linkedin_oauth2', 'user', array(
+                    'user' => $user,
+                    'profile' => $profile,
+                    'oauth_client' =>$client,
+                    'oauth_access_token' => $access_token
+                ), true)) 
+                        login($user);
+            } catch(Exception $e) {
+                register_error($e->getMessage());
+            }
         }
 
         ?>
