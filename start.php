@@ -8,8 +8,9 @@
 	
 	function linkedin_oath2_init()
 	{
-			// Extend login form
+            // Extend login & registration forms
             elgg_extend_view('forms/login', 'linkedin_oauth2/connect');
+            elgg_extend_view('forms/register', 'linkedin_oauth2/connect');
             
             // Walled garden bypasss
             elgg_register_plugin_hook_handler('public_pages', 'walled_garden', function($hook, $type, $return_value, $params) {
