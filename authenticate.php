@@ -42,6 +42,8 @@
      //   var_dump($response, $response['result']);
         $profile = $response['result'];
 
+        if ((!$profile) || (!$profile['id'])) {register_error('Invalid response from server, try again in a bit.'); forward();}
+        
         $response = $client->fetch('https://api.linkedin.com/v1/people/~/email-address', array('oauth2_access_token' => $access_token, 'format' => 'json'));
         $email = $response['result'];
 
